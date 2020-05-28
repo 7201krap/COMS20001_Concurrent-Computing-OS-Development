@@ -1,0 +1,159 @@
+-------------------------------------------------------------------------------
+
+1. Instructions
+
+- replace any [...] with free text,
+  and
+- replace the [?] with an X if you have completed that stage,
+- replace the [?] with an * if you have attempted that stage, but you know
+  it doesn't work completely; document why you think it doesn't work, plus
+  what you would do to fix the problem, at the end of the marksheet.
+
+-------------------------------------------------------------------------------
+
+2. Information
+
+So that we can calibrate and improve the assignment in the future, give us
+a rough idea how long (in hours) you spent on it *in total*:
+
+effort : [50] hours
+
+-------------------------------------------------------------------------------
+
+3. Citation
+
+Clearly it might have an influence on your mark, but the use of third-party
+resources is allowed *iff.* it
+
+- hasn't been explicitly prohibited by the assignment description, *and*
+- is correctly cited.
+
+Let us know any third-party source code or resources you used (if any) so
+it's clear what's your work and what isn't:
+
+[...]
+
+-------------------------------------------------------------------------------
+
+4. Marking
+
+The following gives a stage-by-stage description of the assignment marking
+scheme.  Note this acts as an indicative guideline only, including weights
+for each more obvious aspect (e.g., functional correctness); other aspects
+outside this list can warrant an increase/decrease in marks, with examples
+including hard to quantify features such as style, efficiency, robustness,
+generality, or realism of a solution.  Put another way, identifying then
+reasoning about these latter aspects forms part of the assessment, so they
+are not (necessarily) detailed explicitly.
+
+    Stage 1 : a baseline kernel
+[X]           - pre-emptive multi-tasking                            ( 30%)
+[X]           - priority-based scheduler                             ( 10%)
+
+    Stage 2 : closed generalisations and enhancements
+[X]           - fork, exec, and exit system calls                    ( 15%)
+[X]           - Inter-Process Communication (IPC)                    ( 15%)
+
+    Stage 3 : open   generalisations and enhancements                ( 30%)
+[?]           - MMU-based protection and virtualisation
+                *OR*
+[?]           - LCD screen and PS/2 device drivers and GUI
+                *OR*
+[?]           - file system based on simplified, emulated disk
+                *OR*
+[?]           - kernel port to real, physical hardware
+
+                                                                     ------
+                                                                     (100%)
+
+-------------------------------------------------------------------------------
+
+5. Documentation
+
+Any other documentation, notes or comments that you think are important or
+might be easy to overlook (e.g., a subtle issue or technique in associated
+source code) should go here:
+
+[
+  1. Detailed explanations(comments):
+
+    i)   Scheduling algorithm (line 57 - 103) contains comments(explanations) about how it works
+    ii)  Explanation of fork command, line 235 - 249 in hilevel.c
+    iii) Explanation of dining philosopher, line 1 - 36 in DP.c.
+      Solution of
+        a) ensures mutual exclusion 
+        b) prevents starvation
+    iv)  Any other explanations are commented in the files.
+
+
+  2. Priority-based + ageing + timer pre-emption are used for scheduling algorithm.
+     This implementation is from page 40, week 15, Process management
+
+  3. https://www.geeksforgeeks.org/dining-philosopher-problem-using-semaphores/
+     was used to get some ideas about dining philosopher problem using semaphores.
+     Dining philosopher program is implemented in DP.c and DP.h
+
+  4. Priority-based + ageing + Pre-emption vs Round robin
+
+    High priority processes prevent a low priority process from ever getting the
+    CPU. This invokes starvation problem. Therefore, age parameter was implemented
+    to prevent this problem. Ageing technique ensures that processes with lower
+    priority will eventually complete their execution by gradually increasing the
+    priority of processes that wait in the system for a long time [1].
+
+    In round-robin (+ timer pre-emption) scheduling, each process is served by
+    the CPU for a fixed time quantum, so all process are given the same priority.
+    And starvation doesn't occur because, for each round robin cycle, every process
+    is given a fixed time to execute. However, optimising time quantum
+    for good performance is hard [2].
+
+      If time quantum is too large, the response time of the processes is
+        too much which may not be tolerated in interactive environment.
+
+      If time quantum is too small, it causes unnecessarily frequent
+        context switch leading to more overheads resulting in less throughput [3].
+
+    And priorities cannot be set for the processes. It doesn't give special priority
+    to more important tasks [4].
+
+    [1]: https://www.youtube.com/watch?v=01DiVzZbRjY
+    [3]: https://www.researchgate.net/publication/49587688_FINDING_TIME_QUANTUM_OF_ROUND_ROBIN_CPU_SCHEDULING_ALGORITHM_IN_GENERAL_COMPUTING_SYSTEMS_USING_INTEGER_PROGRAMMING
+    [2,4]: https://www.guru99.com/round-robin-scheduling-example.html
+
+  5. Co-operative vs pre-emptive
+
+    Co-operative : Processes 'voluntarily' give the processor to another process
+    Pre-emptive  : Processes 'force to'    give the processor to another process
+
+    This 'force to' happens by using timer and irq. This program implemented
+    timer(irq) to move between processes (context switch). Imagine the program
+    doesn't have the timer(irq) and we want to execute both P3 and P4. Once we
+    execute P3, then P3 will be executed forever since main_P3() contains infinite loop.
+    P4 cannot be executed forever.
+
+  6. Forcibly terminate the process vs Process using 'exit' to terminate itself
+
+    Forcibly terminate the process         -> console prints [KILL]
+    Process using exit to terminate itself -> console prints [EXIT]
+
+    P3 and P4 can be terminated only by using 'terminate <procTab[i].pid>'
+    This is because P3 and P4 contains infinite while loop. It will never terminate itself.
+    However, P5 can be terminated by using
+
+      i) 'terminate <procTab[i].pid>'     -> console prints [KILL] message
+      ii) leaving P5 to terminate itself.  -> console prints [EXIT] message
+
+    ii) is possible because P5 doesn't contain infinite while loop. Instead, it
+    contains 'for( int i = 0; i < 25; i++ )' on line 25, P5.c. Note that
+    'terminate <procTab[i].pid>' should be typed in the console before it [EXIT]
+    if you want to see [KILL] message.
+
+  7. Explanation about
+
+    i)  Ensuring mutual exclusion
+    ii) Preventing starvation
+
+    could be found in DP.c
+]
+
+-------------------------------------------------------------------------------
